@@ -1,5 +1,8 @@
 import { useState } from "react";
 
+// filter buat nyutik
+// map buat foreach alias ngulangin atau ngemapping gitu loh
+
 const initialItems = [
   { id: 1, description: "Passports", quantity: 2, packed: false },
   { id: 2, description: "Socks", quantity: 12, packed: true },
@@ -19,11 +22,20 @@ export default function App() {
     setItems((items) => items.filter((item) => item.id !== id));
   }
 
+  function handleToggleItem(id) {
+    console.log(id);
+    setItems((items) =>
+      items.map((item) =>
+        item.id === id ? { ...item, packed: !item.packed } : item,
+      ),
+    );
+  }
+
   return (
     <div className="app">
       <Logo />
       <Form onAddItems={handleAddItems} />
-      <PackingList onDeleteItems={handleDeleteItems} items={items} />
+      <PackingList onDeleteItems={handleDeleteItems} onToggleItems={handleToggleItem} items={items} />
       <Stats />
     </div>
   );
@@ -82,12 +94,12 @@ function Form({ onAddItems }) {
   );
 }
 
-function PackingList({ items, onDeleteItems }) {
+function PackingList({ items, onDeleteItems, onToggleItems }) {
   return (
     <div className="list">
       <ul>
         {items.map((item) => (
-          <Item  jenisItem={item} key={item.id} onDeleteItems={onDeleteItems} />
+          <Item jenisItem={item} key={item.id} onDeleteItems={onDeleteItems} onToggleItems={onToggleItems} />
         ))}
       </ul>
     </div>
@@ -102,9 +114,10 @@ function Stats() {
   );
 }
 
-function Item({ jenisItem, onDeleteItems }) {
+function Item({ jenisItem, onDeleteItems, onToggleItems }) {
   return (
     <li>
+      <input type="checkbox" value={jenisItem.packed} onChange={() => onToggleItems(jenisItem.id)} />
       <span style={jenisItem.packed ? { textDecoration: "line-through" } : {}}>
         {jenisItem.quantity} {jenisItem.description}
       </span>
