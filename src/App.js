@@ -35,8 +35,12 @@ export default function App() {
     <div className="app">
       <Logo />
       <Form onAddItems={handleAddItems} />
-      <PackingList onDeleteItems={handleDeleteItems} onToggleItems={handleToggleItem} items={items} />
-      <Stats />
+      <PackingList
+        onDeleteItems={handleDeleteItems}
+        onToggleItems={handleToggleItem}
+        items={items}
+      />
+      <Stats jenisItems={items} />
     </div>
   );
 }
@@ -99,17 +103,37 @@ function PackingList({ items, onDeleteItems, onToggleItems }) {
     <div className="list">
       <ul>
         {items.map((item) => (
-          <Item jenisItem={item} key={item.id} onDeleteItems={onDeleteItems} onToggleItems={onToggleItems} />
+          <Item
+            jenisItem={item}
+            key={item.id}
+            onDeleteItems={onDeleteItems}
+            onToggleItems={onToggleItems}
+          />
         ))}
       </ul>
     </div>
   );
 }
 
-function Stats() {
+function Stats({ jenisItems }) {
+  if (!jenisItems.length)
+    return (
+      <footer className="stats">
+        <em>Start adding some items to your packing list</em>
+      </footer>
+    );
+
+  const numItems = jenisItems.length;
+  const numPacked = jenisItems.filter((jenisItem) => jenisItem.packed).length;
+  const percentage = Math.round((numPacked / numItems) * 100);
+
   return (
     <footer className="stats">
-      <em>You have an x items on your list, and you already packed x (x%)</em>
+      <em>
+        {percentage === 100
+          ? `You have everything! Ready to go`
+          : `You have an ${numItems} items on your list, and you already packed x (${percentage}%)`}
+      </em>
     </footer>
   );
 }
@@ -117,7 +141,11 @@ function Stats() {
 function Item({ jenisItem, onDeleteItems, onToggleItems }) {
   return (
     <li>
-      <input type="checkbox" value={jenisItem.packed} onChange={() => onToggleItems(jenisItem.id)} />
+      <input
+        type="checkbox"
+        checked={jenisItem.packed}
+        onChange={() => onToggleItems(jenisItem.id)}
+      />
       <span style={jenisItem.packed ? { textDecoration: "line-through" } : {}}>
         {jenisItem.quantity} {jenisItem.description}
       </span>
