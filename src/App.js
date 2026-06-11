@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Logo from './Logo';
 
 // filter buat nyutik
 // map buat foreach alias ngulangin atau ngemapping gitu loh
@@ -48,10 +49,6 @@ export default function App() {
       <Stats jenisItems={items} />
     </div>
   );
-}
-
-function Logo() {
-  return <h1>✌️Far away (Win + .)</h1>;
 }
 
 function Form({ onAddItems }) {
@@ -104,7 +101,7 @@ function Form({ onAddItems }) {
 }
 
 function PackingList({ items, onDeleteItems, onToggleItems, onClearList }) {
-  const [sortBy, setSortBy] = useState();
+  const [sortBy, setSortBy] = useState("input");
 
   let sortedItems;
 
@@ -117,7 +114,7 @@ function PackingList({ items, onDeleteItems, onToggleItems, onClearList }) {
     sortedItems = items
       .slice()
       .sort((a, b) => Number(a.packed) - Number(b.packed));
-
+  
   return (
     <div className="list">
       <ul>
